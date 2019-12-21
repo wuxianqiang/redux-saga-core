@@ -6,10 +6,11 @@ import * as serviceWorker from './serviceWorker';
 import {Provider} from 'react-redux'
 import store from './store'
 import Login from './containers/Login'
+import Counter from './containers/Counter'
 
 ReactDOM.render((
 <Provider store={store}>
-  <Login />
+  <Counter />
 </Provider>
 ), document.getElementById('root'));
 

@@ -1,41 +1,27 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import action from '../store/action/login'
+import action from '../store/actions'
 
 class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {}
-    this.usernameRef = React.createRef()
-    this.passwordRef = React.createRef()
+  }
+  handleClick = () => {
+    this.props.incrementAsync()
   }
   render() {
-    let loginForm = (
-      <div>
-        用户名
-        <input type="text" ref={this.usernameRef} />
-        密码
-        <input type="password" ref={this.passwordRef} />
-        <button onClick={this.login}>登录</button>
-        <button onClick={this.logout}>退出</button>
-      </div>
-    )
-    let logoutForm = (
-      <div>
-        用户名{this.props.token}
-        <button onClick={this.logout}>退出</button>
-      </div>
-    )
     return (
       <div>
-        {this.props.token ? logoutForm : loginForm}
+        {this.props.number}
+        <button onClick={this.handleClick}>+</button>
       </div>
     );
   }
 }
 
 const mapStateToProps = state => {
-  return state.user
+  return state
 }
 
 export default connect(mapStateToProps, action)(Login);
