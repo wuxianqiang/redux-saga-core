@@ -1,6 +1,6 @@
-import {take, fork} from 'redux-saga'
+import {take, fork, cancel} from 'redux-saga/effects'
 
-function login () {
+function getUserInfo () {
   return new Promise((resolve, reject) => {
     resolve(100)
   })
@@ -8,9 +8,9 @@ function login () {
 
 export default function * () {
   while(true) {
-    let result = yield take('REQUEST')
-    const task = yield fork(login)
-    
+    yield take('REQUEST')
+    const task = yield fork(getUserInfo)
     yield take('cancel')
+    yield cancel(task)
   }
 }

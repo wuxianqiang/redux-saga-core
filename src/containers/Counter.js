@@ -9,15 +9,6 @@ class Login extends Component {
     this.usernameRef = React.createRef()
     this.passwordRef = React.createRef()
   }
-  login = () => {
-    let username = this.usernameRef.current.value
-    let password = this.passwordRef.current.value
-    console.log(this.props)
-    this.props.login(username, password)
-  }
-  logout = () => {
-    this.props.logout()
-  }
   render() {
     let loginForm = (
       <div>
