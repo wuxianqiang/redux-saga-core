@@ -1,0 +1,7 @@
+export const INCREMENT = 'INCREMENT'
+export const INCREMENT_ASYNC = 'INCREMENT_ASYNC'
+export const LOGIN_REQUEST = 'LOGIN_REQUEST'
+export const LOGIN_OUT = 'LOGIN_OUT'
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
+export const LOGIN_ERROR = 'LOGIN_ERROR'
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
