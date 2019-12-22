@@ -26,3 +26,6 @@ const delay = ms => new Promise((resolve, reject) => {
     resolve(ms)
   }, 100);
 })
+
+
+// all会立刻启动所有的saga，

@@ -25,7 +25,7 @@ export default function createSagaMiddleware() {
       let it = typeof generator[Symbol.iterator] === 'function' ? generator : generator()
       // let it = generator();
       // 开始执行generator
-      function next(nextValue) {
+      function next(nextValue, callback) {
         // 执行yield
         // value={type: 'TAKE', actionType: 传入的type值}
         // next传参会会把参数赋值给yield左边的变量
@@ -63,10 +63,29 @@ export default function createSagaMiddleware() {
                 // cps不是promise，是回调
                 effect.fn(...effect.args, next)
                 break;
+              case 'ALL':
+                // effect.fns.forEach(fn => run(fn)) // 其中可能是异步的
+                // 等多有saga执行完成
+                // next()
+                function times(cb, length) {
+                  // 函数调用多少次之后执行
+                  let count = 0;
+                  return function () {
+                    if (++count === length) {
+                      cb()
+                    }
+                  }
+                }
+                let fns = effect.fns;
+                let done = times(next, fns.length); // 执行的数量完成之后调用next
+                effect.fns.forEach(fn => run(fn, done));
+                break;
               default:
                 return;
             }
           }
+        } else {
+          callback && callback()
         }
       }
       next()
