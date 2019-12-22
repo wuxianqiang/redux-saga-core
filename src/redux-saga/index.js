@@ -48,6 +48,10 @@ export default function createSagaMiddleware() {
                 // 继续往下走
                 next()
                 break;
+              case 'FORK':
+                run(effect.task); // 如果是fork就单独开启一个子进程，
+                next() // 继续往下执行
+                break;
               default:
                 return;
             }
