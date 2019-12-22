@@ -22,7 +22,8 @@ export default function createSagaMiddleware() {
   let channel = createChannel()
   function sagaMiddleware({ dispatch, getState }) {
     function run(generator) {
-      let it = generator();
+      let it = typeof generator[Symbol.iterator] === 'function' ? generator : generator()
+      // let it = generator();
       // 开始执行generator
       function next(nextValue) {
         // 执行yield
@@ -30,21 +31,26 @@ export default function createSagaMiddleware() {
         // next传参会会把参数赋值给yield左边的变量
         const { value: effect, done } = it.next(nextValue)
         if (!done) {
-          debugger
-          switch (effect.type) {
-            case 'TAKE':
-              // 要监听某个动作，往下走，没有传处理函数
-              // 订阅，等待某个事件的发生
-              channel.subscribe(effect.actionType, next) // 当有人派发这个动作会往下走
-              break;
-            case 'PUT':
-              // 直接向参考派发一个动作
-              dispatch(effect.action)
-              // 继续往下走
-              next()
-              break;
-            default:
-              return;
+          if (typeof effect[Symbol.iterator] === 'function') {
+            run(effect) // 如果是一个迭代器，直接传入run方法执行
+            // 不会阻塞代理，里面向下执行
+            next()
+          } else {
+            switch (effect.type) {
+              case 'TAKE':
+                // 要监听某个动作，往下走，没有传处理函数
+                // 订阅，等待某个事件的发生
+                channel.subscribe(effect.actionType, next) // 当有人派发这个动作会往下走
+                break;
+              case 'PUT':
+                // 直接向参考派发一个动作
+                dispatch(effect.action)
+                // 继续往下走
+                next()
+                break;
+              default:
+                return;
+            }
           }
         }
       }
@@ -53,6 +59,7 @@ export default function createSagaMiddleware() {
     sagaMiddleware.run = run
     return function (next) {
       return function (action) {
+        // action是一个普通对象，包含type属性的
         channel.publish(action) // 通过管道派发一个动作
         next(action)
       }
