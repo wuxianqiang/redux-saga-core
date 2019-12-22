@@ -58,6 +58,11 @@ export default function createSagaMiddleware() {
               case 'CALL':
                 effect.fn(effect.args).then(next)
                 break;
+
+              case 'CPS':
+                // cps不是promise，是回调
+                effect.fn(...effect.args, next)
+                break;
               default:
                 return;
             }

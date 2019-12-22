@@ -1,7 +1,8 @@
-import { take, put, takeEvery, call } from '../redux-saga/effects'
+import { take, put, takeEvery, call, cps } from '../redux-saga/effects'
 import * as types from './types'
 
 function * increment() {
+  // let tt = yield cps(delay, 1000)
   let result = yield call(delay, 1000) // call是会阻塞代码的
   console.log(result)
   yield put({ type: types.INCREMENT })

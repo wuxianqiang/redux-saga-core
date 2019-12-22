@@ -37,3 +37,21 @@ export function call(fn, ...args) {
     args
   }
 }
+
+const innerDelay = ms => new Promise(function (resolve, reject) {
+  setTimeout(() => {
+    resolve(ms)
+  }, ms);
+})
+
+export function delay(...args) {
+  return call(innerDelay, ...args)
+}
+
+export function cps(fn, ...args) {
+  return {
+    type: 'CPS',
+    fn,
+    args
+  }
+}
