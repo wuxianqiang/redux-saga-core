@@ -1,7 +1,9 @@
-import { take, put, takeEvery } from '../redux-saga/effects'
+import { take, put, takeEvery, call } from '../redux-saga/effects'
 import * as types from './types'
 
 function * increment() {
+  let result = yield call(delay, 1000) // call是会阻塞代码的
+  console.log(result)
   yield put({ type: types.INCREMENT })
 }
 
@@ -17,3 +19,9 @@ export default function* () {
 export function* rootSaga () {
   yield takeEvery(types.INCREMENT_ASYNC, increment)
 }
+
+const delay = ms => new Promise((resolve, reject) => {
+  setTimeout(() => {
+    resolve(ms)
+  }, 100);
+})

@@ -29,3 +29,11 @@ export function fork(gen) {
     task: gen
   }
 }
+
+export function call(fn, ...args) {
+  return {
+    type: 'CALL',
+    fn,
+    args
+  }
+}

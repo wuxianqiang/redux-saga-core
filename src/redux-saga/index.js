@@ -35,6 +35,9 @@ export default function createSagaMiddleware() {
             run(effect) // 如果是一个迭代器，直接传入run方法执行
             // 不会阻塞代理，里面向下执行
             next()
+          } else if(typeof  effect.then === 'function') {
+            // 等promise完成再调next
+            effect.then(next)
           } else {
             switch (effect.type) {
               case 'TAKE':
@@ -51,6 +54,9 @@ export default function createSagaMiddleware() {
               case 'FORK':
                 run(effect.task); // 如果是fork就单独开启一个子进程，
                 next() // 继续往下执行
+                break;
+              case 'CALL':
+                effect.fn(effect.args).then(next)
                 break;
               default:
                 return;
