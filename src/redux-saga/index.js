@@ -52,8 +52,13 @@ export default function createSagaMiddleware() {
                 next()
                 break;
               case 'FORK':
-                run(effect.task); // 如果是fork就单独开启一个子进程，
-                next() // 继续往下执行
+                let newTask = effect.task()
+                run(newTask); // 如果是fork就单独开启一个子进程，
+                next(newTask) // 继续往下执行
+                break;
+              case 'CANCEL':
+                // 停止
+                effect.task.return('任务直接结束') // iterator调用return就会马上停止
                 break;
               case 'CALL':
                 effect.fn(effect.args).then(next)
